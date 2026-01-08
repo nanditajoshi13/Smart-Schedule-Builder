@@ -15,7 +15,7 @@ User credentials are stored in a lightweight file*based database ('users.db'), m
 - **Frontend:** HTML, CSS, JavaScript (Fetch API)
 - **Database:** F;at file ('users.db')
 
-#Getting Started
+# Getting Started
 copy the python + flask and HTML files from this repository and run in your terminal  
 Make sure that your system has Python 3.14, flask, flask-cors
 one saved run the python file and you will get the link to the site.
