@@ -5,10 +5,12 @@ User credentials are stored in a lightweight file based database ('users.db'), m
 ## Features
 - User Registration (name, username, password)
 - User Login with validation
+- Initial user details for setup
 - Modern, responsive UI (HTML + CSS)
 - File-based storage ('users.db')
 - Toggle between Register and Login forms
 - Built with Python + Flask
+- Page redirection to setup page
 
 ## Tech Stack
 - **Backend:** Python, Flask
@@ -16,14 +18,15 @@ User credentials are stored in a lightweight file based database ('users.db'), m
 - **Database:** Flat file ('users.db')
 
 # Getting Started
-Copy the python + flask and HTML files from this repository and run in your terminal  
-Make sure that your system has Python 3.14, flask, flask-cors  
-Once saved run the python file and you will get the link to the site.
+**SYSTEM REQUIREMENTS** - python 3.14, flask, flask-cors  
+- Copy the python and HTML files from the repository in a seperate folder  
+- Make sure all files are in the same folder  
+- Make sure the names of your files are same as the names given in the repository  
+- Run the controller.py code to get the url
+- Open the url in any browser to use the program
 
 ## Upcoming Updates
-- Welcome Page
-- Schedule Builder Prompts
-- Output Panels
+- User Dashboard
 - Dark mode
 - Reminders
 - SQLite or PostgreSQL
