@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Schedule - Setup</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #F8F3EC, #E0CFBA);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* align at top so scroll works */
+        overflow-y: auto;        /* enable vertical scroll */
+    }
+
+    .container {
+        width: 92%;
+        max-width: 520px;
+        margin: 40px auto;       /* spacing from top */
+        padding: 28px;
+        border-radius: 18px;
+        position: relative;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(185, 160, 130, 0.4);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+        z-index: 2;
+    }
+
+    h2 {
+        text-align: center;
+        color: #6b4a35;
+        margin-bottom: 5px;
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .cute-welcome {
+        text-align: center;
+        color: #8d6a55;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-top: 14px;
+        font-weight: 600;
+        color: #6b4a35;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 10px;
+        border: 1px solid #C6B5A4;
+        background: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+        outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    textarea:focus {
+        border-color: #b68963;
+        box-shadow: 0 0 6px rgba(182, 137, 99, 0.6);
+        background: #fffdf8;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 22px;
+        padding: 12px;
+        background: #C4AF9C;
+        border: none;
+        border-radius: 12px;
+        color: #2B241E;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 5px 12px rgba(0,0,0,0.18);
+    }
+
+    button:hover {
+        background: #9F8B78;
+        transform: translateY(-1px);
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    .radio-box {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 6px;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #C6B5A4;
+        background: rgba(255, 255, 255, 0.55);
+    }
+
+    .radio-box label {
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        color: #6b4a35;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    .radio-box input[type="radio"] {
+        margin-right: 10px;
+        flex-shrink: 0;
+        transform: scale(1.1);
+    }
+
+    .time-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+    }
+
+    .time-box input[type="time"] {
+        flex: 1;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #C6B5A4;
+        background: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+    }
+
+    .time-box span {
+        color: #6b4a35;
+        font-weight: 600;
+    }
+
+    .break-box {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #C6B5A4;
+        background: rgba(255, 255, 255, 0.55);
+    }
+
+    .break-box input[type="number"],
+    .break-box select {
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #C6B5A4;
+        background: rgba(255, 255, 255, 0.55);
+        font-size: 12px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2 id="welcome-title">🌸 Welcome! 🌸</h2>
+  <p id="welcome-msg" class="cute-welcome">Please enter your details below ✨</p>
+
+  <!-- IMPORTANT: action must be /register/ -->
+  <form method="POST" action="/register/">
+     <label>Full Name:</label>
+     <input type="text" id="nameInput" name="name"
+         placeholder="Enter your name..."
+         value="{{ name }}" oninput="updateWelcome()" required>
+
+    <label>Username:</label>
+    <input type="text" name="username"
+         placeholder="Enter your username..."
+         value="{{ username }}" required>
+
+    <label>Password:</label>
+    <input type="password" name="password"
+         placeholder="Enter your password..."
+         value="{{ password }}" required>
+
+    <label>Role:</label>
+    <div class="radio-box">
+      <label><input type="radio" name="role" value="student"> Student</label>
+      <label><input type="radio" name="role" value="business"> Business Person</label>
+      <label><input type="radio" name="role" value="workfromhome"> Work From Home</label>
+      <label><input type="radio" name="role" value="housewife"> Housewife</label>
+      <label><input type="radio" name="role" value="other"> Other</label>
+    </div>
+
+    <label>Main Work/Study Hours:</label>
+    <div class="time-box">
+      <input type="time" name="work_start" required>
+      <span>to</span>
+      <input type="time" name="work_end" required>
+    </div>
+
+    <label>Flexible Hours:</label>
+    <div class="time-box">
+      <input type="time" name="flex_start" required>
+      <span>to</span>
+      <input type="time" name="flex_end" required>
+    </div>
+
+    <label>No-Way Hours:</label>
+    <div class="time-box">
+      <input type="time" name="no_start" required>
+      <span>to</span>
+      <input type="time" name="no_end" required>
+    </div>
+
+    <label>Break Preference:</label>
+    <div class="break-box">
+      <span>Break of</span>
+      <input type="number" name="break_length" min="1" max="60" placeholder="15">
+      <select name="break_length_unit">
+        <option value="minutes">minutes</option>
+        <option value="hours">hours</option>
+      </select>
+      <span>after every</span>
+      <input type="number" name="work_interval" min="1" max="8" placeholder="2">
+      <select name="work_interval_unit">
+        <option value="hours">hours</option>
+        <option value="minutes">minutes</option>
+      </select>
+    </div>
+
+    <label>Main Categories:</label>
+    <div class="radio-box">
+      <label><input type="radio" name="main_category" value="Study"> Study</label>
+      <label><input type="radio" name="main_category" value="Work"> Work</label>
+      <label><input type="radio" name="main_category" value="Personal"> Personal</label>
+    </div>
+
+    <label>Scheduling Style:</label>
+    <div class="radio-box">
+      <label><input type="radio" name="scheduling_style" value="Fixed"> Fixed</label>
+      <label><input type="radio" name="scheduling_style" value="Flexible"> Flexible</label>
+    </div>
+
+    <label>Primary Goal:</label>
+    <div class="radio-box">
+      <label><input type="radio" name="primary_goal" value="Exam prep"> Exam prep</label>
+      <label><input type="radio" name="primary_goal" value="Project Planning"> Project Planning</label>
+      <label><input type="radio" name="primary_goal" value="Assignments"> Assignments</label>
+    </div>
+
+    <button type="submit">Submit Setup</button>
+  </form>
+</div>
+
+<script>
+function updateWelcome() {
+  let name = document.getElementById("nameInput").value.trim();
+  let title = document.getElementById("welcome-title");
+  let msg = document.getElementById("welcome-msg");
+  if (name.length > 0) {
+    title.textContent = `🌸 Welcome, ${name}! 🌸`;
+    msg.textContent = "Please enter your details below ✨";
+  } else {
+    title.textContent = "🌸 Welcome! 🌸";
+    msg.textContent = "Please enter your details below ✨";
+  }
+}
+</script>
+</body>
+</html>
