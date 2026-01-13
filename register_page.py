@@ -1,90 +1,57 @@
 import os
+from flask import Blueprint, render_template, request, session
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+register_bp = Blueprint("register", __name__, template_folder=BASE_DIR)
+
 DB_FILE = "users.db"
+
 def save_user(name, username, password, setup_data):
     with open(DB_FILE, "a") as f:
         line = f"{name}|{username}|{password}"
         for key, value in setup_data.items():
             line += f"|{key}={value}"
         f.write(line + "\n")
-def username_exists(uname):
-    if not os.path.exists(DB_FILE):
-        if not os.path.exists(DB_FILE):
-            return False
-        with open(DB_FILE, "r") as f:
-            for line in f:
-                parts = line.strip().split("|")
-                if parts[1] == uname:
-                    return True
-        return False
-def register_user():
-    print("\n----USER REGISTRATION---")
-    name = input("Enter Full Name: ")
-    username = input("Enter Username: ")
-    if username_exists(username):
-        print("Username already exists!")
-        return
-    password = input("Enter Password: ")
-    print("\n---SETUP---")
-    role = input("Role (Student/business/word-from-from/housewife/other): ")
-    work_hours = input("Main work/study hours (e.g. 09:00-18:00): ")
-    flexible = input("Flexible hours for urgent tasks (e.g. 18:00-20:00): ")
-    no_way = input("No-way hours (e.g. 22:00-07:00): ")
-    breaks = input("Break preference (e.g. 2h/15m): ")
-    categories = input("Main categories (comma separated, e.g. study,work,personal): ")
-    style = input("Scheduling style (fixed/flexible): ")
-    goal = input("Primary goal (exam prep, project planning, balanced routine, etc.): ")
-    setup_data = {
-        "role": role,
-        "work_hours": work_hours,
-        "flexible":  flexible,
-        "no_way": no_way,
-        "breaks": breaks,
-        "categories": categories,
-        "style": style,
-        "goal": goal
-    }
-    save_user(name, username, password, setup_data)
-    print("Registration & Setup Successful!")
-def login_user():
-    print("\n---USER LOGIN---")
-    uname = input("Enter Username: ")
-    passw = input("Enter Password: ")
-    if not os.path.exists(DB_FILE):
-        print("No users registered yet!")
-        return
-    with open(DB_FILE, "r") as f:
-        for line in f:
-            parts = line.strip().split("|")
-            name, username, password = parts[0], parts[1], parts[2]
-            if username == uname and password == passw:
-                print(f"\nLogin Succesful! Welcome, {name}")
-                setup_info = parts[3:]
-                print("Your setup preferences:")
-                for item in setup_info:
-                    print(" -", item)
-                return
-    print("Invalid Username or Password!")
-def main():
-    while True:
-        print("\n==============================")
-        print(" SMART SCHEDULE BUILDER APP ")
-        print("==============================")
-        print("1. Register")
-        print("2. Login")
-        print("3. Exit")
-        try:
-            choice = int(input("Enter choice: "))
-        except ValueError:
-            print("Invalid choice!")
-            continue
-        if choice == 1:
-            register_user()
-        elif choice == 2:
-            login_user()
-        elif choice == 3:
-            print("exiting application...")
-            break
-        else:
-            print("Invalid choice!")
-if __name__ == "__main__":
-    main()
+
+@register_bp.route("/", methods=["GET", "POST"])
+def register_page():
+    if request.method == "POST":
+        name = session.get("name")
+        username = session.get("username")
+        password = session.get("password")
+
+        role = request.form.get("role")
+        work_start = request.form.get("work_start")
+        work_end = request.form.get("work_end")
+        flex_start = request.form.get("flex_start")
+        flex_end = request.form.get("flex_end")
+        no_start = request.form.get("no_start")
+        no_end = request.form.get("no_end")
+        break_length = request.form.get("break_length")
+        break_length_unit = request.form.get("break_length_unit")
+        work_interval = request.form.get("work_interval")
+        work_interval_unit = request.form.get("work_interval_unit")
+        category = request.form.get("main_category")
+        style = request.form.get("scheduling_style")
+        goal = request.form.get("primary_goal")
+
+        setup_data = {
+            "role": role,
+            "work_hours": f"{work_start}-{work_end}",
+            "flexible": f"{flex_start}-{flex_end}",
+            "no_way": f"{no_start}-{no_end}",
+            "breaks": f"{break_length}{break_length_unit}/every {work_interval}{work_interval_unit}",
+            "categories": category,
+            "style": style,
+            "goal": goal
+        }
+
+        save_user(name, username, password, setup_data)
+        return f"Registration & Setup Successful! Saved {username} to {DB_FILE}"
+
+    return render_template(
+        "register_page.html",
+        name=session.get("name", ""),
+        username=session.get("username", ""),
+        password=session.get("password", "")
+    )
