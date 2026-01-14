@@ -14,14 +14,14 @@
         background: linear-gradient(135deg, #F8F3EC, #E0CFBA);
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* align at top so scroll works */
-        overflow-y: auto;        /* enable vertical scroll */
+        align-items: flex-start; 
+        overflow-y: auto;       
     }
 
     .container {
         width: 92%;
         max-width: 520px;
-        margin: 40px auto;       /* spacing from top */
+        margin: 40px auto;       
         padding: 28px;
         border-radius: 18px;
         position: relative;
@@ -154,6 +154,7 @@
         border-radius: 10px;
         border: 1px solid #C6B5A4;
         background: rgba(255, 255, 255, 0.55);
+        color: #6b4a35;
     }
 
     .break-box input[type="number"],
@@ -163,6 +164,13 @@
         border: 1px solid #C6B5A4;
         background: rgba(255, 255, 255, 0.55);
         font-size: 12px;
+       
+    }
+    .description {
+      font-size: 0.9em;
+      color: #6b4a35;
+      margin-bottom: 10px;
+      font-style: italic;
     }
 </style>
 </head>
@@ -171,7 +179,6 @@
   <h2 id="welcome-title">🌸 Welcome! 🌸</h2>
   <p id="welcome-msg" class="cute-welcome">Please enter your details below ✨</p>
 
-  <!-- IMPORTANT: action must be /register/ -->
   <form method="POST" action="/register/">
      <label>Full Name:</label>
      <input type="text" id="nameInput" name="name"
@@ -189,15 +196,17 @@
          value="{{ password }}" required>
 
     <label>Role:</label>
+    <p class="description">Select your primary role.</p>
     <div class="radio-box">
       <label><input type="radio" name="role" value="student"> Student</label>
-      <label><input type="radio" name="role" value="business"> Business Person</label>
-      <label><input type="radio" name="role" value="workfromhome"> Work From Home</label>
-      <label><input type="radio" name="role" value="housewife"> Housewife</label>
+      <label><input type="radio" name="role" value="business"> Professional</label>
+      <label><input type="radio" name="role" value="workfromhome"> Remote Worker</label>
+      <label><input type="radio" name="role" value="housewife"> Homemaker</label>
       <label><input type="radio" name="role" value="other"> Other</label>
     </div>
 
     <label>Main Work/Study Hours:</label>
+    <p class="description">Define your core working/study hours to complete tasks</p>
     <div class="time-box">
       <input type="time" name="work_start" required>
       <span>to</span>
@@ -205,13 +214,15 @@
     </div>
 
     <label>Flexible Hours:</label>
+    <p class="description">Specify your flexible availability</p>
     <div class="time-box">
       <input type="time" name="flex_start" required>
       <span>to</span>
       <input type="time" name="flex_end" required>
     </div>
 
-    <label>No-Way Hours:</label>
+    <label>Unavailable Hours:</label>
+    <p class="description">Indicate time you are not available at</p>
     <div class="time-box">
       <input type="time" name="no_start" required>
       <span>to</span>
@@ -219,8 +230,9 @@
     </div>
 
     <label>Break Preference:</label>
+    <p class="description">Preferred break duration and frequency</p>
     <div class="break-box">
-      <span>Break of</span>
+      <span>Take a break of</span>
       <input type="number" name="break_length" min="1" max="60" placeholder="15">
       <select name="break_length_unit">
         <option value="minutes">minutes</option>
@@ -232,29 +244,34 @@
         <option value="hours">hours</option>
         <option value="minutes">minutes</option>
       </select>
+      <span>of work.</span>
     </div>
 
-    <label>Main Categories:</label>
+    <label>Categories:</label>
+    <p class="description">Select your primary activity category</p>
     <div class="radio-box">
-      <label><input type="radio" name="main_category" value="Study"> Study</label>
+      <label><input type="radio" name="main_category" value="Academic"> Academic</label>
       <label><input type="radio" name="main_category" value="Work"> Work</label>
       <label><input type="radio" name="main_category" value="Personal"> Personal</label>
     </div>
 
     <label>Scheduling Style:</label>
+    <p class="description">Choose your preferred scheduling approach</p>
     <div class="radio-box">
-      <label><input type="radio" name="scheduling_style" value="Fixed"> Fixed</label>
-      <label><input type="radio" name="scheduling_style" value="Flexible"> Flexible</label>
+      <label><input type="radio" name="scheduling_style" value="Fixed">Structure <i>(Fixed)</i></label>
+      <label><input type="radio" name="scheduling_style" value="Flexible">Adaptive <i>(Flexible)</i></label>
     </div>
 
     <label>Primary Goal:</label>
+    <p class="description">What is your main objective?</p>
     <div class="radio-box">
-      <label><input type="radio" name="primary_goal" value="Exam prep"> Exam prep</label>
+      <label><input type="radio" name="primary_goal" value="Exam Preparation"> Exam Preparation</label>
       <label><input type="radio" name="primary_goal" value="Project Planning"> Project Planning</label>
-      <label><input type="radio" name="primary_goal" value="Assignments"> Assignments</label>
+      <label><input type="radio" name="primary_goal" value="Assignments"> Assignment Completion</label>
+      <label><input type="radio" name="primary_goal" value="Personal Productivity">Personal Productivity</label>
     </div>
 
-    <button type="submit">Submit Setup</button>
+    <button type="submit">Submit</button>
   </form>
 </div>
 
@@ -271,6 +288,9 @@ function updateWelcome() {
     msg.textContent = "Please enter your details below ✨";
   }
 }
+
+window.onload = updateWelcome;
 </script>
+
 </body>
 </html>
