@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SMART DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Oregano&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #F8F3EC, #E0CFBA);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .container {
+            width: 92%;
+            max-width: 700px;
+            min-width: 1300px;
+            background: rgba(255, 255, 255, 0.55);
+            padding: 80px 28px;
+            border-radius: 18px;
+            position: relative; 
+            border: 1px solid rgba(185, 160, 130, 0.4);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px #4A0E0E;
+            margin-bottom: 30px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .ornament {
+            position: absolute;
+            width: 180px; 
+            height: 180px;
+            background-image: url('borders.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+            filter: url(#mahogany-tint);
+            opacity: .5;
+            mix-blend-mode: multiply; 
+        }
+    
+        .tl { top: -10px; left: -10px; }
+        .tr { top: -10px; right: -10px; transform: scaleX(-1); }
+        .bl { bottom: -10px; left: -10px; transform: scaleY(-1); }
+        .br { bottom: -10px; right: -10px; transform: scale(-1); }
+
+        h1 {
+            font-size: 80px;
+            font-family: 'Oregano', cursive;
+            color: #4A0E0E; 
+            margin: 0;
+            position: relative;
+            z-index: 5;
+        }
+
+        h2 {
+            text-align: center;
+            color:#6b4a35;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 26px;
+        }
+
+        h3 {
+            color: #6b4a35;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+            position: relative;
+            font-style: italic;
+            z-index: 5;
+        }
+
+        h4 {
+            color: #6b4a35;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 28px;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 700px;
+            min-width:600px;
+            box-shadow: 0 5px 15px #4A0E0E;
+            position: relative;
+            margin: 30px auto;
+        }
+
+        .mini-input {
+            background: rgb(255, 255, 255);
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #4A0E0E;
+            text-align: left;
+            color: #6b4a35;
+        }
+
+        .main-row {
+            display: flex;
+            justify-content: center;
+            gap:100px;
+            align-items: flex-start;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width:600px;
+        }
+
+        .right-column {
+            width: 600px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <svg style="position: absolute; width: 0; height: 0;">
+  <filter id="mahogany-tint">
+    <feColorMatrix type="matrix" 
+      values="0 0 0 0 0.29  
+              0 0 0 0 0.05  
+              0 0 0 0 0.05  
+              0 0 0 1 0" />
+  </filter>
+</svg>
+        <div class="ornament tl"></div>
+        <div class="ornament tr"></div>
+        <!-- <div class="ornament bl"></div>
+        <div class="ornament br"></div> -->
+
+        <h1>Smart Schedule Dashboard</h1>
+        <h3>Find all your information here</h3>
+    </div>
+    <div class="main-row">
+        <div class="left-column">
+            <div class="info-card">
+                <h2>Personal Information</h2>
+                <div class="mini-input">Name</div>
+                <div class="mini-input">Username</div>
+
+            </div>
+            <div class="info-card">
+                <h2>Category</h2>
+                <h4>Activity Type:</h4>
+                <div class="mini-input">Activity Type:</div>
+                <h4>Scheduling Approach:</h4>
+                <div class="mini-input">Scheduling Approach: </div>
+                <h4>Main Objective:</h4>
+                <div class="mini-input">Main Objective: </div>
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="info-card">
+                <h2>Time Schedule</h2>
+                <h4>Main Work/Study Hours:</h4>
+                <div class="mini-input">Start Time</div>
+                <div class="mini-input">End Time</div>
+
+                <h4>Flexible Hours:</h4>
+                <div class="mini-input">Start Time</div>
+                <div class="mini-input">End Time</div>
+
+                <h4>Unavailable Hours:</h4>
+                <div class="mini-input">Start Time</div>
+                <div class="mini-input">End Time</div>
+
+                <h4>Break Preference:</h4>
+                <div class="mini-input">Break Preference</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
