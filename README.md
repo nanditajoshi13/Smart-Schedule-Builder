@@ -33,5 +33,5 @@ User credentials are stored in a lightweight file based database ('users.db'), m
 - Password hashing for security
 
 ## Authors
-- [Nandita Joshi](https://github.com/nanditajoshi13))
+- [Nandita Joshi](https://github.com/nanditajoshi13)
 - [Vanshika](https://github.com/Vanshika4705)
