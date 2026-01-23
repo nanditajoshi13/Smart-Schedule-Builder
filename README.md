@@ -6,6 +6,7 @@ User credentials are stored in a lightweight file based database ('users.db'), m
 - User Registration (name, username, password)
 - User Login with validation
 - Initial user details for setup
+- Dashboard displaying all details
 - Modern, responsive UI (HTML + CSS)
 - File-based storage ('users.db')
 - Toggle between Register and Login forms
@@ -26,11 +27,11 @@ User credentials are stored in a lightweight file based database ('users.db'), m
 - Open the url in any browser to use the program
 
 ## Upcoming Updates
-- User Dashboard
 - Dark mode
 - Reminders
 - SQLite or PostgreSQL
 - Password hashing for security
 
 ## Authors
-Nandita Joshi and Vanshika
+- [Nandita Joshi](https://github.com/nandotajoshi13)
+- [Vanshika](https://github.com/Vanshika4705)
