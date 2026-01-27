@@ -122,12 +122,15 @@
         .left-column {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 2px;
             width:600px;
         }
 
         .right-column {
             width: 600px;
+            gap: 2px;
+            display: flex;
+            flex-direction: column;
         }
 
     </style>
@@ -146,49 +149,62 @@
 </svg>
         <div class="ornament tl"></div>
         <div class="ornament tr"></div>
-        <!-- <div class="ornament bl"></div>
-        <div class="ornament br"></div> -->
 
         <h1>Smart Schedule Dashboard</h1>
         <h3>Find all your information here</h3>
     </div>
     <div class="main-row">
         <div class="left-column">
+            
             <div class="info-card">
                 <h2>Personal Information</h2>
-                <div class="mini-input">Name</div>
-                <div class="mini-input">Username</div>
+                <h4>Full Name:</h4>
+                <div class="mini-input">Name: {{ name }}</div>
+                
+                <h4>Account Username:</h4>
+                <div class="mini-input">Username: {{ username }}</div>
 
             </div>
+            
             <div class="info-card">
                 <h2>Category</h2>
                 <h4>Activity Type:</h4>
-                <div class="mini-input">Activity Type:</div>
+                <div class="mini-input">Activity Type: {{ categories }}</div>
+                
                 <h4>Scheduling Approach:</h4>
-                <div class="mini-input">Scheduling Approach: </div>
+                <div class="mini-input">Scheduling Approach: {{ style }}</div>
+                
                 <h4>Main Objective:</h4>
-                <div class="mini-input">Main Objective: </div>
+                <div class="mini-input">Main Objective: {{ goal }}</div>
             </div>
         </div>
         <div class="right-column">
+            
+            <div class="info-card">
+                <h2>Profile Type</h2>
+                <h4>Primary Role:</h4>
+                <div class="mini-input">Role: {{ role }}</div>
+            </div>
+            
             <div class="info-card">
                 <h2>Time Schedule</h2>
                 <h4>Main Work/Study Hours:</h4>
-                <div class="mini-input">Start Time</div>
-                <div class="mini-input">End Time</div>
+                <div class="mini-input">Start Time: {{ work_hours }}</div>
 
                 <h4>Flexible Hours:</h4>
-                <div class="mini-input">Start Time</div>
-                <div class="mini-input">End Time</div>
+                <div class="mini-input">Start Time: {{ flexible }}</div>
 
                 <h4>Unavailable Hours:</h4>
-                <div class="mini-input">Start Time</div>
-                <div class="mini-input">End Time</div>
+                <div class="mini-input">Start Time: {{ no_way }}</div>
 
                 <h4>Break Preference:</h4>
-                <div class="mini-input">Break Preference</div>
+                <div class="mini-input">Break Preference: {{ breaks }}</div>
             </div>
+            
         </div>
+    </div>
+    <div class="container">
+        <h2>Daily Schedule</h2>
     </div>
 </body>
 </html>
