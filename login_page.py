@@ -1,4 +1,5 @@
 import os
+import sqlite3
 from flask import Blueprint, render_template, request, redirect, url_for, session
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,17 +18,20 @@ def login():
 
     if not os.path.exists(DB_FILE):
         return "No users registered yet!"
+    
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+    cur.execute("SELECT name, password FROM users WHERE username=?", (uname,))
+    row = cur.fetchone()
+    conn.close()
 
-    with open(DB_FILE, "r") as f:
-        for line in f:
-            parts = line.strip().split("|")
-            if len(parts) >= 3:
-                name, username, password = parts[:3]
-                if username == uname and password == passw:
-                    session["name"] = name
-                    return f"Login Successful! Welcome, {name}"
+    if row and row[1] == passw:
+        session["name"] = row[0]
+        session["username"] = uname
+        return redirect(url_for("dashboard.dashboard_page"))
+    else:
+        return "Invalid Usernaem or Password!"
 
-    return "Invalid Username or Password!"
 
 @login_bp.route("/register", methods=["POST"])
 def register():
@@ -35,8 +39,15 @@ def register():
     username = request.form.get("username")
     password = request.form.get("password")
 
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+    cur.execute("INSERT INTO users (name, username, password) VALUES (?, ?, ?)",
+                (name, username, password))
+    conn.commit()
+    conn.close()
+
     session["name"] = name
     session["username"] = username
     session["password"] = password
 
-    return redirect(url_for("register.register_page")) 
+    return redirect(url_for("register.register_page"))
