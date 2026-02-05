@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 login_bp = Blueprint("login", __name__, template_folder=BASE_DIR)
@@ -17,7 +17,9 @@ def login():
     passw = request.form.get("password")
 
     if not os.path.exists(DB_FILE):
-        return "No users registered yet!"
+        flash ("No users registered yet!")
+        return redirect(url_for("login.home"))
+
     
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
@@ -30,7 +32,8 @@ def login():
         session["username"] = uname
         return redirect(url_for("dashboard.dashboard_page"))
     else:
-        return "Invalid Usernaem or Password!"
+        flash("Invalid Username or Password!")
+        return redirect(url_for("login.home"))
 
 
 @login_bp.route("/register", methods=["POST"])
@@ -41,10 +44,16 @@ def register():
 
     conn = sqlite3.connect(DB_FILE)
     cur = conn.cursor()
-    cur.execute("INSERT INTO users (name, username, password) VALUES (?, ?, ?)",
+    try:
+        cur.execute("INSERT INTO users (name, username, password) VALUES (?, ?, ?)",
                 (name, username, password))
-    conn.commit()
-    conn.close()
+        conn.commit()
+    except sqlite3.IntegrityError:
+        flash("Username already exists. Please choose another one.")
+        conn.close()
+        return redirect(url_for("login.home"))
+    finally: 
+        conn.close()
 
     session["name"] = name
     session["username"] = username
