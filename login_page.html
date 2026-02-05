@@ -77,11 +77,28 @@
     .hidden {
       display: none;
     }
+    .alert {
+      background-color: #f8d7da;
+      color: #842029;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border: 1px solid #f5c2c7;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Smart Schedule Builder</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-danger" role="alert">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}  
 
     <form id="registerForm" method="POST" action="/login/register">
       <input type="text" name="name" placeholder="Full Name" required>
