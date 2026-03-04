@@ -1,18 +1,17 @@
-import os
 import sqlite3
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-register_bp = Blueprint("register", __name__, template_folder=BASE_DIR)
+register_bp = Blueprint("register", __name__)
 
 DB_FILE = "users.db"
 
 @register_bp.route("/", methods=["GET", "POST"])
 def register_page():
+
+    if "user_id" not in session:
+        return redirect(url_for("login.home"))
+
     if request.method == "POST":
-        name = session.get("name")
-        username = session.get("username")
-        password = session.get("password")
 
         role = request.form.get("role")
         work_start = request.form.get("work_start")
@@ -36,11 +35,15 @@ def register_page():
 
         conn = sqlite3.connect(DB_FILE)
         cur = conn.cursor()
+
         cur.execute("""
             UPDATE users
-            SET role=?, work_hours=?, flexible=?, no_way=?, breaks=?, categories=?, style=?, goal=?
-            WHERE username=?
-        """, (role, work_hours, flexible, no_way, breaks, category, style, goal, username))
+            SET role=?, work_hours=?, flexible=?, no_way=?, breaks=?, 
+                categories=?, style=?, goal=?
+            WHERE id=?
+        """, (role, work_hours, flexible, no_way, breaks,
+              category, style, goal, session["user_id"]))
+
         conn.commit()
         conn.close()
 
@@ -49,6 +52,5 @@ def register_page():
     return render_template(
         "register_page.html",
         name=session.get("name", ""),
-        username=session.get("username", ""),
-        password=session.get("password", "")
+        username=session.get("username", "")
     )
