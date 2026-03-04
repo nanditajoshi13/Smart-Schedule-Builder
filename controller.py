@@ -2,7 +2,6 @@ import sqlite3
 import os
 from flask import Flask, redirect, url_for
 from flask_cors import CORS
-
 from login_page import login_bp
 from register_page import register_bp
 from dashboard import dashboard_bp
@@ -12,7 +11,6 @@ CORS(app)
 app.secret_key = "supersecretkey"
 
 DB_FILE = "users.db"
-
 
 def init_db():
     conn = sqlite3.connect(DB_FILE)
@@ -38,7 +36,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 init_db()
 
 app.register_blueprint(login_bp, url_prefix="/login")
@@ -49,7 +46,6 @@ app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
 @app.route("/")
 def home():
     return redirect(url_for("login.home"))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
