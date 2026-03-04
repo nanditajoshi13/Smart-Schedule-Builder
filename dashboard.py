@@ -1,41 +1,93 @@
-import os
-import datetime
-from flask import Blueprint, Flask, render_template, session
+from flask import Blueprint, render_template, session, redirect, url_for, request
 import sqlite3
+from schedule import build_schedule_round_robin
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-dashboard_bp = Blueprint("dashboard", __name__, template_folder=BASE_DIR)
-DB_FILE = "users.db"
+dashboard_bp = Blueprint("dashboard", __name__)
+DATABASE = "users.db"
 
-@dashboard_bp.route("/", methods=["GET"])
+def calculate_hours(range_str):
+    if not range_str or "-" not in range_str:
+        return 8
+    try:
+        start, end = range_str.split("-")
+        start_hour = int(start.split(":")[0])
+        end_hour = int(end.split(":")[0])
+        return max(0, end_hour - start_hour)
+    except:
+        return 8
+
+@dashboard_bp.route("/", methods=["GET", "POST"])
 def dashboard_page():
 
-    username = session.get("username")
-    if not username:
-        return "Please log in first."
-    
-    conn = sqlite3.connect(DB_FILE)
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT name, username, role, work_hours, flexible,no_way, breaks, categories, style, goal
-        FROM users WHERE username=?
-        """, (username,))
-    row = cur.fetchone()
+    if "user_id" not in session:
+        return redirect(url_for("login.home"))
+
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE id=?", (session["user_id"],))
+    user = cursor.fetchone()
+
+    if not user:
+        conn.close()
+        return "User not found"
+
+    name = user["name"]
+    work_range = user["work_hours"]
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            name TEXT,
+            duration INTEGER
+        )
+    """)
+
+    if request.method == "POST":
+        task_name = request.form.get("task_name")
+        task_duration = request.form.get("task_duration")
+
+        if task_name and task_duration:
+            cursor.execute("""
+                INSERT INTO tasks (user_id, name, duration)
+                VALUES (?, ?, ?)
+            """, (session["user_id"], task_name, int(task_duration)))
+            conn.commit()
+
+        return redirect(url_for("dashboard.dashboard_page"))
+
+    cursor.execute("""
+        SELECT name, duration FROM tasks
+        WHERE user_id=?
+    """, (session["user_id"],))
+
+    rows = cursor.fetchall()
     conn.close()
-    
-    if not row:
-        return "No data found for this user."
-    
+
+    tasks = [{"name": r["name"], "duration": r["duration"]} for r in rows]
+
+    user_profile = {
+        "work_hours": calculate_hours(work_range)
+    }
+
+    schedule = []
+    if tasks:
+        schedule = build_schedule_round_robin(user_profile, tasks)
+
     return render_template(
-        "dashboard.html",
-        name=row[0],
-        username=row[1],
-        role=row[2],
-        work_hours=row[3],
-        flexible=row[4],
-        no_way=row[5],
-        breaks=row[6],
-        categories=row[7],
-        style=row[8],
-        goal=row[9]
-    )
+    "dashboard.html",
+    name=user["name"],
+    username=user["username"],
+    categories=user["categories"],
+    style=user["style"],
+    goal=user["goal"],
+    role=user["role"],
+    work_hours=user["work_hours"],
+    flexible=user["flexible"],
+    no_way=user["no_way"],
+    breaks=user["breaks"],
+    tasks=tasks,
+    schedule=schedule
+)
