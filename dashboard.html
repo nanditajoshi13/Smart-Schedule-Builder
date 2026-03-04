@@ -20,8 +20,8 @@
             overflow-y: auto;
         }
         .container {
-            width: 92%;
-            max-width: 700px;
+            width: 95%;
+            max-width: 1100px;
             min-width: 1300px;
             background: rgba(255, 255, 255, 0.55);
             padding: 80px 28px;
@@ -34,25 +34,7 @@
             overflow: hidden;
             text-align: center;
         }
-        .ornament {
-            position: absolute;
-            width: 180px; 
-            height: 180px;
-            background-image: url('borders.png'); 
-            background-size: contain;
-            background-repeat: no-repeat;
-            pointer-events: none;
-            z-index: 1;
-            filter: url(#mahogany-tint);
-            opacity: .5;
-            mix-blend-mode: multiply; 
-        }
-    
-        .tl { top: -10px; left: -10px; }
-        .tr { top: -10px; right: -10px; transform: scaleX(-1); }
-        .bl { bottom: -10px; left: -10px; transform: scaleY(-1); }
-        .br { bottom: -10px; right: -10px; transform: scale(-1); }
-
+        
         h1 {
             font-size: 80px;
             font-family: 'Oregano', cursive;
@@ -133,69 +115,57 @@
             flex-direction: column;
         }
 
+        table {
+            align-items: center;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <svg style="position: absolute; width: 0; height: 0;">
-  <filter id="mahogany-tint">
-    <feColorMatrix type="matrix" 
-      values="0 0 0 0 0.29  
-              0 0 0 0 0.05  
-              0 0 0 0 0.05  
-              0 0 0 1 0" />
-  </filter>
-</svg>
-        <div class="ornament tl"></div>
-        <div class="ornament tr"></div>
-
         <h1>Smart Schedule Dashboard</h1>
         <h3>Find all your information here</h3>
     </div>
     <div class="main-row">
         <div class="left-column">
-            
             <div class="info-card">
                 <h2>Personal Information</h2>
                 <h4>Full Name:</h4>
                 <div class="mini-input">Name: {{ name }}</div>
-                
                 <h4>Account Username:</h4>
                 <div class="mini-input">Username: {{ username }}</div>
 
             </div>
-            
             <div class="info-card">
                 <h2>Category</h2>
                 <h4>Activity Type:</h4>
                 <div class="mini-input">Activity Type: {{ categories }}</div>
-                
                 <h4>Scheduling Approach:</h4>
                 <div class="mini-input">Scheduling Approach: {{ style }}</div>
-                
                 <h4>Main Objective:</h4>
                 <div class="mini-input">Main Objective: {{ goal }}</div>
             </div>
         </div>
         <div class="right-column">
-            
             <div class="info-card">
                 <h2>Profile Type</h2>
                 <h4>Primary Role:</h4>
                 <div class="mini-input">Role: {{ role }}</div>
             </div>
-            
             <div class="info-card">
                 <h2>Time Schedule</h2>
                 <h4>Main Work/Study Hours:</h4>
-                <div class="mini-input">Start Time: {{ work_hours }}</div>
+                <div class="mini-input">Time Duration: {{ work_hours }}</div>
 
                 <h4>Flexible Hours:</h4>
-                <div class="mini-input">Start Time: {{ flexible }}</div>
+                <div class="mini-input">Time Duration: {{ flexible }}</div>
 
                 <h4>Unavailable Hours:</h4>
-                <div class="mini-input">Start Time: {{ no_way }}</div>
+                <div class="mini-input">Time Duration: {{ no_way }}</div>
 
                 <h4>Break Preference:</h4>
                 <div class="mini-input">Break Preference: {{ breaks }}</div>
@@ -203,8 +173,59 @@
             
         </div>
     </div>
+    
     <div class="container">
-        <h2>Daily Schedule</h2>
-    </div>
+        
+        <h2>Schedule</h2>
+        
+        <h3>Add Task</h3>
+        <form method="POST" action="/dashboard">
+            <input type="text" name="task_name" placeholder="Enter Task Name" required>
+            <input type="number" name="task_duration" placeholder="Duration (hours)" required>
+            <button type="submit">Add Task</button>
+        </form>
+        <hr>
+        <h3>Your Tasks</h3>
+        
+        {% if tasks %}
+            <table border="1">
+                <tr>
+                    <th>Task</th>
+                    <th>Duration (hrs)</th>
+                </tr>
+                {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.duration }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No tasks added yet.</p>
+        {% endif %}
+
+        <hr>
+
+        <h3>Generated Schedule</h3>
+        
+        {% if schedule %}
+            <table border="1">
+                <tr>
+                    <th>Time</th>
+                    <th>Task</th>
+                </tr>
+                {% for entry in schedule %}
+                    <tr>
+                        <td>{{ entry.time }}</td>
+                        <td>{{ entry.task }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No schedule generated yet.</p>
+        {% endif %}
+
+</div>
+
 </body>
 </html>
