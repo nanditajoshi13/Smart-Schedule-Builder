@@ -1,5 +1,5 @@
 # Smart-Schedule-Builder
-A Simple **Flask-based web application** that allows users to **register, set up their preferences. and login**, as of yet, with a clean, modern interface.  
+A Simple **Flask-based web application** that allows users to **register, set up their preferences, login and generate schedule**, with a clean, modern interface.  
 User credentials are stored in a lightweight SQLite database ('users.db'), making it easy to run without extra dependencies.
   
 ## Features
@@ -17,6 +17,23 @@ User credentials are stored in a lightweight SQLite database ('users.db'), makin
 - **Backend:** Python, Flask
 - **Frontend:** HTML, CSS, JavaScript (Fetch API)
 - **Database:** SQLite ('users.db')
+
+# Project Structure
+```
+project-name/
+│
+├── controller.py
+├── login_page.py
+├── register_page.py
+├── dashboard.py
+├── schedule.py
+├── users.db
+│
+└── templates/
+    ├── login_page.html
+    ├── register_page.html
+    └── dashboard.html
+```
 
 # Getting Started
 **SYSTEM REQUIREMENTS** - Python 3.14+, Flask, Flask-CORS  
