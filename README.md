@@ -10,8 +10,6 @@ User credentials are stored in a lightweight SQLite database ('users.db'), makin
 - Modern, responsive UI (HTML + CSS)
 - File-based storage ('users.db')
 - Toggle between Register and Login forms
-- Built with Python + Flask
-- Page redirection from login -> setup -> dashboard
 
 ## Tech Stack
 - **Backend:** Python, Flask
@@ -50,4 +48,3 @@ project-name/
 
 ## Authors
 - [Nandita Joshi](https://github.com/nanditajoshi13)
-- [Vanshika](https://github.com/Vanshika4705)
