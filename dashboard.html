@@ -122,6 +122,53 @@
             justify-content: center;
         }
 
+        /* 🔥 TASK FORM FIX */
+.task-form {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;   /* allows wrapping instead of squeezing */
+    margin-top: 20px;
+}
+
+.task-form input,
+.task-form select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #4A0E0E;
+    font-family: "Poppins", sans-serif;
+}
+
+/* 🔥 FIX INDIVIDUAL WIDTHS */
+.task-form input[name="task_name"] {
+    width: 220px;
+}
+
+.task-form input[name="task_duration"] {
+    width: 150px;
+}
+
+.task-form input[name="priority"] {
+    width: 140px;   /* 👈 THIS FIXES YOUR ISSUE */
+}
+
+.task-form select {
+    width: 160px;
+}
+
+.task-form button {
+    padding: 10px 18px;
+    background: #4A0E0E;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.task-form button:hover {
+    background: #6b4a35;
+}
+
     </style>
 </head>
 <body>
@@ -173,57 +220,70 @@
             
         </div>
     </div>
-    
     <div class="container">
-        
-        <h2>Schedule</h2>
-        
-        <h3>Add Task</h3>
-        <form method="POST" action="/dashboard">
-            <input type="text" name="task_name" placeholder="Enter Task Name" required>
-            <input type="number" name="task_duration" placeholder="Duration (hours)" required>
-            <button type="submit">Add Task</button>
-        </form>
-        <hr>
-        <h3>Your Tasks</h3>
-        
-        {% if tasks %}
-            <table border="1">
-                <tr>
-                    <th>Task</th>
-                    <th>Duration (hrs)</th>
-                </tr>
-                {% for task in tasks %}
-                    <tr>
-                        <td>{{ task.name }}</td>
-                        <td>{{ task.duration }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>No tasks added yet.</p>
-        {% endif %}
 
-        <hr>
+    <h2>Schedule</h2>
 
-        <h3>Generated Schedule</h3>
-        
-        {% if schedule %}
-            <table border="1">
+    <h3>Add Task</h3>
+    <form method="POST" action="/dashboard" class="task-form">
+        <input type="text" name="task_name" placeholder="Enter Task Name" required>
+        <input type="number" name="task_duration" placeholder="Duration (hours)" required>
+        <input type="number" name="priority" placeholder="Priority {1-5}" min="1" max="5">
+
+        <select name="task_type">
+            <option value="other">Other</option>
+            <option value="exam_prep">Exam Prep</option>
+            <option value="assignment">Assignment</option>
+            <option value="project">Project</option>
+            <option value="housework">Housework</option>
+        </select>
+
+        <button type="submit">Add Task</button>
+    </form>
+
+    <hr>
+
+    <h3>Your Tasks</h3>
+    {% if tasks %}
+        <table border="1">
+            <tr>
+                <th>Task</th>
+                <th>Duration (hrs)</th>
+                <th>Priority</th>
+                <th>Type</th>
+            </tr>
+            {% for task in tasks %}
                 <tr>
-                    <th>Time</th>
-                    <th>Task</th>
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.duration }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.task_type }}</td>
                 </tr>
-                {% for entry in schedule %}
-                    <tr>
-                        <td>{{ entry.time }}</td>
-                        <td>{{ entry.task }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p>No schedule generated yet.</p>
-        {% endif %}
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No tasks added yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Generated Schedule</h3>
+    {% if schedule %}
+        <table border="1">
+            <tr>
+                <th>Time</th>
+                <th>Task</th>
+            </tr>
+            {% for entry in schedule %}
+                <tr>
+                    <td>{{ entry.time }}</td>
+                    <td>{{ entry.task }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No schedule generated yet.</p>
+    {% endif %}
 
 </div>
 
