@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request
 import sqlite3
-from schedule import build_schedule_round_robin
+from schedule import build_schedule, create_profile_from_db, Task
 
 dashboard_bp = Blueprint("dashboard", __name__)
 DATABASE = "users.db"
+
 
 def calculate_hours(range_str):
     if not range_str or "-" not in range_str:
@@ -15,6 +16,7 @@ def calculate_hours(range_str):
         return max(0, end_hour - start_hour)
     except:
         return 8
+
 
 @dashboard_bp.route("/", methods=["GET", "POST"])
 def dashboard_page():
@@ -41,7 +43,9 @@ def dashboard_page():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             name TEXT,
-            duration INTEGER
+            duration INTEGER,
+            priority INTEGER,
+            task_type TEXT
         )
     """)
 
@@ -49,32 +53,61 @@ def dashboard_page():
         task_name = request.form.get("task_name")
         task_duration = request.form.get("task_duration")
 
+        priority = request.form.get("priority") or 3
+        task_type = request.form.get("task_type") or "other"
+
         if task_name and task_duration:
             cursor.execute("""
-                INSERT INTO tasks (user_id, name, duration)
-                VALUES (?, ?, ?)
-            """, (session["user_id"], task_name, int(task_duration)))
+                INSERT INTO tasks (user_id, name, duration, priority, task_type)
+                VALUES (?, ?, ?, ?, ?)
+            """, (session["user_id"], task_name, int(task_duration), int(priority), task_type))
             conn.commit()
 
         return redirect(url_for("dashboard.dashboard_page"))
 
     cursor.execute("""
-        SELECT name, duration FROM tasks
+        SELECT name, duration, priority, task_type FROM tasks
         WHERE user_id=?
     """, (session["user_id"],))
 
     rows = cursor.fetchall()
     conn.close()
 
-    tasks = [{"name": r["name"], "duration": r["duration"]} for r in rows]
+    tasks = []
+    for r in rows:
+        task = Task(
+            name=r["name"],
+            duration=float(r["duration"]),
+            task_type=r["task_type"] if r["task_type"] else "other",
+            priority=int(r["priority"] if r["priority"] else 3),
+            deadline_in=999,
+            chunk_size=1.0
+        )
+        tasks.append(task)
 
-    user_profile = {
-        "work_hours": calculate_hours(work_range)
+    user_data = {
+        "work_hours": user["work_hours"] or "9-17",
+        "no_way": user["no_way"] or "",
+        "breaks": user["breaks"] or "15min/every 1hr",
+        "style:": (user["style"] or "flexible").lower()
     }
+
+    profile = create_profile_from_db(user_data)
 
     schedule = []
     if tasks:
-        schedule = build_schedule_round_robin(user_profile, tasks)
+        result = build_schedule(profile, tasks)
+        schedule = result["schedule"]
+
+    tasks_display = [
+        {
+            "name": t.name,
+            "duration": t.duration,
+            "priority": t.priority,
+            "task_type": t.task_type
+        }
+        for t in tasks
+    ]
 
     return render_template(
     "dashboard.html",
@@ -88,6 +121,6 @@ def dashboard_page():
     flexible=user["flexible"],
     no_way=user["no_way"],
     breaks=user["breaks"],
-    tasks=tasks,
+    tasks=tasks_display,
     schedule=schedule
 )
