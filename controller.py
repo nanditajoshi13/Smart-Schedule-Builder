@@ -14,7 +14,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root", 
-        password="#N_joshi13",
+        password="your_password", //enter your mysql command line client password
         database="schedule_db"
     )
 
