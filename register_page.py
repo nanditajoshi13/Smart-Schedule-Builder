@@ -1,9 +1,15 @@
-import sqlite3
+import mysql.connector
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
 register_bp = Blueprint("register", __name__)
 
-DB_FILE = "users.db"
+def get_db_connection():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="your_password", //enter your mysql password here
+        database="schedule_db"
+    )
 
 @register_bp.route("/", methods=["GET", "POST"])
 def register_page():
@@ -33,14 +39,14 @@ def register_page():
         no_way = f"{no_start}-{no_end}"
         breaks = f"{break_length}{break_length_unit}/every {work_interval}{work_interval_unit}"
 
-        conn = sqlite3.connect(DB_FILE)
+        conn = get_db_connection()
         cur = conn.cursor()
 
         cur.execute("""
             UPDATE users
-            SET role=?, work_hours=?, flexible=?, no_way=?, breaks=?, 
-                categories=?, style=?, goal=?
-            WHERE id=?
+            SET role=%s, work_hours=%s, flexible=%s, no_way=%s, breaks=%s, 
+                categories=%s, style=%s, goal=%s
+            WHERE id=%s
         """, (role, work_hours, flexible, no_way, breaks,
               category, style, goal, session["user_id"]))
 
